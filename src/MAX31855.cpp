@@ -174,9 +174,9 @@ float MAX31855::getTemperature(int32_t rawValue)
 {
   if (rawValue == MAX31855_FORCE_READ_DATA) rawValue = readRawData();
 
-  if (detectThermocouple(rawValue) != MAX31855_THERMOCOUPLE_OK) return MAX31855_ERROR;
+  if (detectThermocouple(rawValue) != MAX31855_THERMOCOUPLE_OK  && getChipID(rawValue) != MAX31855_ID) return MAX31855_ERROR;
 
-  rawValue = rawValue >> 18;                                                           //clear D17..D0 bits
+  rawValue = rawValue >> 18; //clear D17..D0 bits
 
   return (float)rawValue * MAX31855_THERMOCOUPLE_RESOLUTION;
 }
