@@ -26,15 +26,15 @@
   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
 
-  - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C
+  - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
-    with 0.25°C resolution/increment
-  - Cold junction compensation range -40°C..+125° ±3°C with 0.062°C resolution/increment
-  - Keep K-type thermocouple cold junction & MAX31855 at the same temperature
-  - Avoid placing heat-generating devices or components near the converter
-    because this may produce errors
+    with 0.25°C resolution/increment.
+  - Cold junction compensation range -40°C..+125° ±3°C with 0.062°C resolution/increment.
+    Optimal performance of cold junction compensation happends when the thermocouple cold junction
+    & the MAX31855 are at the same temperature. Avoid placing heat-generating devices or components
+    near the converter because this may produce an errors.
   - It is strongly recommended to add a 10nF/0.01mF ceramic surface-mount capacitor, placed across
-    the T+ and T- pins, to filter noise on the thermocouple lines
+    the T+ and T- pins, to filter noise on the thermocouple lines.
 
   GNU GPL license, all text above must be included in any redistribution, see link below for details:
   - https://www.gnu.org/licenses/licenses.html
@@ -135,7 +135,7 @@ void loop()
   lcd.print("C");
   lcd.write(LCD_SPACE_SYMBOL);
 
-  lcd.printHorizontalGraph('T', 3, temperature, MAX_TEMPERATURE); //name of the bar, 3-rd row, current value, max. value
+  lcd.printHorizontalGraph('T', 2, temperature, MAX_TEMPERATURE); //name of the bar, 3-rd row, current value, max. value
 
   temperature = myMAX31855.getColdJunctionTemperature();
 
@@ -145,6 +145,8 @@ void loop()
   lcd.write(LCD_DEGREE_SYMBOL);
   lcd.print("C");
   lcd.write(LCD_SPACE_SYMBOL);
+
+  lcd.printHorizontalGraph('T', 3, temperature, 30);              //name of the bar, 4-rd row, current value, max. value
 
   delay(1000);
 }
