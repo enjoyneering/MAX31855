@@ -122,12 +122,12 @@ void loop()
 
   lcd.setCursor(2, 0);
   if (temperature != MAX31855_ERROR) lcd.print(temperature, 1);
-  else                               lcd.print("xx");              //thermocouple short to Vcc, or to GND, or not connected
+  else                               lcd.print("xx");             //thermocouple short to Vcc, or to GND, or not connected
   lcd.write(LCD_DEGREE_SYMBOL);
   lcd.print("C");
   lcd.write(LCD_SPACE_SYMBOL);
 
-  lcd.printHorizontalGraph('T', 3, temperature, MAX_TEMPERATURE); //name of the bar, 3-rd row, current value, max. value
+  lcd.printHorizontalGraph('T', 2, temperature, MAX_TEMPERATURE); //name of the bar, 3-rd row, current value, max. value
 
   temperature = myMAX31855.getColdJunctionTemperature();
 
@@ -137,6 +137,8 @@ void loop()
   lcd.write(LCD_DEGREE_SYMBOL);
   lcd.print("C");
   lcd.write(LCD_SPACE_SYMBOL);
+
+  lcd.printHorizontalGraph('T', 3, temperature, 30);              //name of the bar, 4-rd row, current value, max. value
 
   delay(1000);
 }
