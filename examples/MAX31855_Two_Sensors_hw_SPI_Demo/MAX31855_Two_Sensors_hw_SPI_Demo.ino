@@ -11,6 +11,8 @@
   Uno, Mini, Pro:          13          12          10                   11
   Mega2560, Due:           52          50          53                   51
   Leonardo, ProMicro:      15          14          x                    16
+  NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
+  WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
 
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
@@ -38,8 +40,8 @@ int32_t rawData_02  = 0;
 
   cs  - chip select, if CS low serial interface is enabled
 */
-MAX31855 myMAX31855_01(3);
-MAX31855 myMAX31855_02(4);
+MAX31855 myMAX31855_01(3); //for ESP8266 use D3
+MAX31855 myMAX31855_02(4); //for ESP8266 use D4
 
 void setup()
 {
