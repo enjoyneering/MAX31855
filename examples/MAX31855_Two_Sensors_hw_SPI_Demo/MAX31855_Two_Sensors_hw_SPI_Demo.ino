@@ -11,8 +11,6 @@
   Uno, Mini, Pro:          13          12          10                   11
   Mega2560, Due:           52          50          53                   51
   Leonardo, ProMicro:      15          14          x                    16
-  NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
-  WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
 
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
@@ -30,8 +28,8 @@
 /***************************************************************************************************/
 #include <MAX31855.h>
 
-uint16_t rawData_01  = 0;
-uint16_t rawData_02  = 0;
+int32_t rawData_01  = 0;
+int32_t rawData_02  = 0;
 
 /*
 - for harware spi
@@ -51,7 +49,7 @@ void setup()
   myMAX31855_01.begin();
   myMAX31855_02.begin();
 
-  while (myMAX31855_01.getChipID() == 0)
+  while (myMAX31855_01.getChipID() != MAX31855_ID)
   {
     Serial.println("MAX6675_01 error");
     delay(5000);
