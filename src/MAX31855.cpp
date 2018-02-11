@@ -19,12 +19,14 @@
 
    This sensor can work with hardware SPI bus, specials pins are required to interface
 
-   Connect chip to pins:    SCLK        MISO        don't use SS for CS  don't use MOSI for CS
-   Uno, Mini, Pro:          13          12          10                   11
-   Mega2560, Due:           52          50          53                   51
-   Leonardo, ProMicro:      15          14          x                    16
-   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
-   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
+   Connect chip to pins:    SCLK        MISO        don't use SS for CS   don't use MOSI for CS
+   Uno, Mini, Pro:          13          12          10                    11
+   Mega2560, Due:           52          50          53                    51
+   Leonardo, ProMicro:      15          14          x                     16
+   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+
+   *ESP8266, for CS use GPIO2/D4 or GPIO0/D3 & apply an external 25kOhm pullup/down resistor.
 
    GNU GPL license, all text above must be included in any redistribution, see link below for details:
    - https://www.gnu.org/licenses/licenses.html
@@ -95,7 +97,7 @@ void MAX31855::begin(void)
     case false:
       pinMode(_so, INPUT);
       pinMode(_sck, OUTPUT);
-      digitalWrite(_sck, LOW);     
+      digitalWrite(_sck, LOW);
       break;
   }
 
@@ -168,6 +170,9 @@ uint16_t MAX31855::getChipID(int32_t rawValue)
       if T+ and T- are unconnected it goes low
     - bits D30..D18 contain the converted temperature in the order of MSB to LSB,
       if T+ and T- are unconnected they go high
+    - it is strongly recommended to add a 10nF/0.01mF ceramic surface-mount
+      capacitor, placed across the T+ and T- pins, to filter noise on the
+      thermocouple lines
 */
 /**************************************************************************/
 float MAX31855::getTemperature(int32_t rawValue)
