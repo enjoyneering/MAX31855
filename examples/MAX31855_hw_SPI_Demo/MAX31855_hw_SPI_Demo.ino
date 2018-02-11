@@ -5,6 +5,15 @@
   written by : enjoyneering79
   sourse code: https://github.com/enjoyneering/MAX6675
 
+  This sensor uses SPI bus to communicate, specials pins are required to interface
+
+  Connect chip to pins:    SCLK        MISO        don't use SS for CS  don't use MOSI for CS
+  Uno, Mini, Pro:          13          12          10                   11
+  Mega2560, Due:           52          50          53                   51
+  Leonardo, ProMicro:      15          14          x                    16
+  NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
+  WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
+
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
     with 0.25°C resolution/increment.
@@ -24,15 +33,13 @@
 int32_t rawData = 0;
 
 /*
-- for soft spi
+- for harware spi
 
-  MAX31855(cs, so, sck)
+  MAX31855(cs)
 
   cs  - chip select, if CS low serial interface is enabled
-  so  - serial data output
-  sck - serial clock input
 */
-MAX31855 myMAX31855(3, 4, 7);
+MAX31855 myMAX31855(3);
 
 
 void setup()
