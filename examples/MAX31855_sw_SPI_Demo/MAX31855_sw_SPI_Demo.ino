@@ -21,7 +21,7 @@
 /***************************************************************************************************/
 #include <MAX31855.h>
 
-uint16_t rawData = 0;
+int32_t rawData = 0;
 
 /*
 - for soft spi
@@ -42,7 +42,7 @@ void setup()
   /* start MAX31855 */
   myMAX31855.begin();
 
-  while (myMAX31855.getChipID() == 0)
+  while (myMAX31855.getChipID() != MAX31855_ID)
   {
     Serial.println("MAX6675 error");
     delay(5000);
