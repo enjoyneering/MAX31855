@@ -13,10 +13,7 @@
   Leonardo:                2          3
   ATtiny85:                0(5)       2/A1(7)   (ATTinyCore  - https://github.com/SpenceKonde/ATTinyCore
                                                  & TinyWireM - https://github.com/SpenceKonde/TinyWireM)
-  ESP8266 ESP-01:          GPIO0/D5   GPIO2/D3  (ESP8266Core - https://github.com/esp8266/Arduino)
-  NodeMCU 1.0:             GPIO4/D2   GPIO5/D1
-  WeMos D1 Mini:           GPIO4/D2   GPIO5/D1
-
+                                                 
   This sensor uses SPI bus to communicate, specials pins are required to interface
 
   Connect chip to pins:    SCLK        MISO        don't use SS for CS  don't use MOSI for CS
