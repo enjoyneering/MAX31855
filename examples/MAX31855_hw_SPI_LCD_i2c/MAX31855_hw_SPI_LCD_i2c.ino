@@ -40,6 +40,9 @@
   - https://www.gnu.org/licenses/licenses.html
 */
 /***************************************************************************************************/
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+#endif
 #include <SPI.h>
 #include <Wire.h>
 #include <MAX31855.h>
@@ -61,12 +64,17 @@ MAX31855(cs)
 cs  - chip select, if CS low serial interface is enabled
 */
 
-MAX31855          myMAX31855(4); //chip select pin 
+MAX31855          myMAX31855(D4); //chip select pin 
 LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 
 void setup()
 {
+  #if defined(ESP8266)
+  WiFi.persistent(false);                                       //disable saving wifi config into SDK flash area
+  WiFi.mode(WIFI_OFF);                                          //turn off wifi (swAP+ station)
+  #endif
+
   Serial.begin(115200);
 
   /* LCD connection check */  
@@ -82,7 +90,7 @@ void setup()
   /* start MAX31855 */
   myMAX31855.begin();
 
-  while (myMAX31855.getChipID() == 0)
+  while (myMAX31855.getChipID() != MAX31855_ID)
   {
     lcd.setCursor(0, 0);
     lcd.print("MAX31855 error");
