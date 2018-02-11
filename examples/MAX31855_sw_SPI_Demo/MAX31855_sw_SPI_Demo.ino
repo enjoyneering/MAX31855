@@ -32,7 +32,7 @@ int32_t rawData = 0;
   so  - serial data output
   sck - serial clock input
 */
-MAX31855 myMAX31855(3, 4, 7);
+MAX31855 myMAX31855(3, 4, 7); //for ESP8266 use D3, D4, D7
 
 
 void setup()
