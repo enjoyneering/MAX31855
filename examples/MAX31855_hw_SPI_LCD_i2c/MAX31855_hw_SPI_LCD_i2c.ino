@@ -13,15 +13,13 @@
   Leonardo:                2          3
   ATtiny85:                0(5)       2/A1(7)   (ATTinyCore  - https://github.com/SpenceKonde/ATTinyCore
                                                  & TinyWireM - https://github.com/SpenceKonde/TinyWireM)
-                                                 
+
   This sensor uses SPI bus to communicate, specials pins are required to interface
 
   Connect chip to pins:    SCLK        MISO        don't use SS for CS  don't use MOSI for CS
   Uno, Mini, Pro:          13          12          10                   11
   Mega2560, Due:           52          50          53                   51
   Leonardo, ProMicro:      15          14          x                    16
-  NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
-  WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
 
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
@@ -37,9 +35,6 @@
   - https://www.gnu.org/licenses/licenses.html
 */
 /***************************************************************************************************/
-#if defined(ESP8266)
-#include <ESP8266WiFi.h>
-#endif
 #include <SPI.h>
 #include <Wire.h>
 #include <MAX31855.h>
@@ -61,17 +56,12 @@ MAX31855(cs)
 cs  - chip select, if CS low serial interface is enabled
 */
 
-MAX31855          myMAX31855(D4); //chip select pin 
+MAX31855          myMAX31855(4); //chip select pin 
 LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 
 void setup()
 {
-  #if defined(ESP8266)
-  WiFi.persistent(false);                                       //disable saving wifi config into SDK flash area
-  WiFi.mode(WIFI_OFF);                                          //turn off wifi (swAP+ station)
-  #endif
-
   Serial.begin(115200);
 
   /* LCD connection check */  
