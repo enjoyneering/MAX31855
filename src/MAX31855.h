@@ -19,12 +19,14 @@
 
    This sensor can work with hardware SPI bus, specials pins are required to interface
 
-   Connect chip to pins:    SCLK        MISO        don't use SS for CS  don't use MOSI for CS
-   Uno, Mini, Pro:          13          12          10                   11
-   Mega2560, Due:           52          50          53                   51
-   Leonardo, ProMicro:      15          14          x                    16
-   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
-   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8            GPIO13/D7
+   Connect chip to pins:    SCLK        MISO        don't use SS for CS   don't use MOSI for CS
+   Uno, Mini, Pro:          13          12          10                    11
+   Mega2560, Due:           52          50          53                    51
+   Leonardo, ProMicro:      15          14          x                     16
+   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+
+   *ESP8266, for CS use GPIO2/D4 or GPIO0/D3 & apply an external 25kOhm pullup/down resistor.
 
    GNU GPL license, all text above must be included in any redistribution, see link below for details:
    - https://www.gnu.org/licenses/licenses.html
