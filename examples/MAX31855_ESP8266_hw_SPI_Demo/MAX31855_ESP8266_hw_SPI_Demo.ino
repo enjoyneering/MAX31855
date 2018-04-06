@@ -43,8 +43,8 @@ MAX31855 myMAX31855(D4); //chip select pin
 
 void setup()
 {
-  WiFi.persistent(false); //disable saving wifi config into SDK flash area
-  WiFi.mode(WIFI_OFF);    //turn off wifi (swAP+ station)
+  WiFi.persistent(false);  //disable saving wifi config into SDK flash area
+  WiFi.forceSleepBegin(0); //disable swAP & station by calling "WiFi.mode(WIFI_OFF)" & put modem to sleep
 
   Serial.begin(115200);
 
