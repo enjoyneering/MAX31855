@@ -61,7 +61,7 @@ LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POS
 void setup()
 {
   WiFi.persistent(false);                                       //disable saving wifi config into SDK flash area
-  WiFi.mode(WIFI_OFF);                                          //turn off wifi (swAP+ station)
+  WiFi.forceSleepBegin();                                       //disable swAP & station by calling "WiFi.mode(WIFI_OFF)" & put modem to sleep
 
   Serial.begin(115200);
 
