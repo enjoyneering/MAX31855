@@ -4,6 +4,7 @@
    with 12-bit Cold Junction Compensation. Can work with hardware & bitbang 5Mhz SPI & sampling
    rate ~9..10Hz.
 
+   - MAX31855 maximum power supply voltage is 3.6v
    - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
    - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
      with 0.25°C resolution/increment.
@@ -17,16 +18,24 @@
    written by : enjoyneering79
    sourse code: https://github.com/enjoyneering/MAX31855
 
-   This sensor can work with hardware SPI bus, specials pins are required to interface
+   This sensor uses SPI bus to communicate, specials pins are required to interface
+   Board:                                    SCLK        MISO        SS don't use for CS   MOSI
+   Uno, Mini, Pro, ATmega168, ATmega328..... 13          12          10                    11
+   Mega2560, Due............................ 52          50          53                    51
+   Leonardo, ProMicro, ATmega32U4........... 15          14          x                     16
+   Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**       PA4**                 PA7**
+   NodeMCU 1.0, WeMos D1 Mini............... GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
 
-   Connect chip to pins:    SCLK        MISO        don't use SS for CS   don't use MOSI for CS
-   Uno, Mini, Pro:          13          12          10                    11
-   Mega2560, Due:           52          50          53                    51
-   Leonardo, ProMicro:      15          14          x                     16
-   NodeMCU 1.0:             GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
-   WeMos D1 Mini:           GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
-
-   *ESP8266, for CS use GPIO2/D4 or GPIO0/D3 & apply an external 25kOhm pullup/down resistor.
+                                            *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
+                                             pullup-down resistor
+                                           **STM32F103xxxx pins are NOT 5v tolerant, bi-directional
+                                             logic level converter is needed
+ 
+   Frameworks & Libraries:
+   ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
+   ESP8266 Core          - https://github.com/esp8266/Arduino
+   ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
+   STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
 
    GNU GPL license, all text above must be included in any redistribution, see link below for details:
    - https://www.gnu.org/licenses/licenses.html
@@ -36,17 +45,20 @@
 #ifndef MAX31855_h
 #define MAX31855_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
+#if defined(ARDUINO) && ARDUINO >= 100 //arduino core v1.0 or later
 #include <Arduino.h>
 #else
 #include <WProgram.h>
 #endif
 
-#if defined (__AVR__)
-#include <avr/pgmspace.h>
+#if defined(__AVR__)
+#include <avr/pgmspace.h>              //use for PROGMEM Arduino AVR
 #elif defined(ESP8266)
-#include <pgmspace.h>
+#include <pgmspace.h>                  //use for PROGMEM Arduino ESP8266
+#elif defined(_VARIANT_ARDUINO_STM32_)
+#include <avr/pgmspace.h>              //use for PROGMEM Arduino STM32
 #endif
+
 #include <SPI.h>
 
 #define MAX31855_CONVERSION_POWER_UP_TIME   200    //in milliseconds
