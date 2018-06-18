@@ -33,7 +33,7 @@
   Uno, Mini, Pro, ATmega168, ATmega328..... 13          12          10                    11
   Mega2560, Due............................ 52          50          53                    51
   Leonardo, ProMicro, ATmega32U4........... 15          14          x                     16
-  Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**      PA4**                  PA7**
+  Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**       PA4**                 PA7**
   NodeMCU 1.0, WeMos D1 Mini............... GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
 
                                             *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
