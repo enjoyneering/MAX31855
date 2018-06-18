@@ -5,6 +5,7 @@
   written by : enjoyneering79
   sourse code: https://github.com/enjoyneering/MAX6675
 
+  - MAX31855 maximum power supply voltage is 3.6v
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
     with 0.25°C resolution/increment.
@@ -14,6 +15,15 @@
     near the converter because this may produce an errors.
   - It is strongly recommended to add a 10nF/0.01mF ceramic surface-mount capacitor, placed across
     the T+ and T- pins, to filter noise on the thermocouple lines.
+
+  Frameworks & Libraries:
+  ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
+  ESP8266 Core          - https://github.com/esp8266/Arduino
+  ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
+  STM32 Core*           - https://github.com/rogerclarkmelbourne/Arduino_STM32
+
+                          *STM32F103xxxx pins are NOT 5v tolerant, bi-directional
+                           logic level converter is needed
 
   GNU GPL license, all text above must be included in any redistribution, see link below for details:
   - https://www.gnu.org/licenses/licenses.html
@@ -44,10 +54,10 @@ void setup()
 
   while (myMAX31855.getChipID() != MAX31855_ID)
   {
-    Serial.println("MAX6675 error");
+    Serial.println(F("MAX6675 error")); //(F()) saves string to flash & keeps dynamic memory free
     delay(5000);
   }
-  Serial.println("MAX6675 OK");
+  Serial.println(F("MAX6675 OK"));
 }
 
 void loop()
@@ -57,16 +67,19 @@ void loop()
     switch (myMAX31855.detectThermocouple())
     {
       case MAX31855_THERMOCOUPLE_SHORT_TO_VCC:
-        Serial.println("Thermocouple short to VCC");
+        Serial.println(F("Thermocouple short to VCC"));
         break;
+
       case MAX31855_THERMOCOUPLE_SHORT_TO_GND:
-        Serial.println("Thermocouple short to GND");
+        Serial.println(F("Thermocouple short to GND"));
         break;
+
       case MAX31855_THERMOCOUPLE_NOT_CONNECTED:
-        Serial.println("Thermocouple not connected");
+        Serial.println(F("Thermocouple not connected"));
         break;
+
       case MAX31855_THERMOCOUPLE_UNKNOWN:
-        Serial.println("Thermocouple unknown error, check spi cable");
+        Serial.println(F("Thermocouple unknown error, check spi cable"));
         break;
     }
     delay(5000);
@@ -74,13 +87,13 @@ void loop()
 
   rawData = myMAX31855.readRawData();
 
-  Serial.print("Chip ID: ");
+  Serial.print(F("Chip ID: "));
   Serial.println(myMAX31855.getChipID(rawData));
 
-  Serial.print("Cold Junction: ");
+  Serial.print(F("Cold Junction: "));
   Serial.println(myMAX31855.getColdJunctionTemperature(rawData));
 
-  Serial.print("Thermocouple: ");
+  Serial.print(F("Thermocouple: "));
   Serial.println(myMAX31855.getTemperature(rawData));
 
   delay(5000);
