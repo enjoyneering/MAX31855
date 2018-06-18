@@ -5,6 +5,7 @@
   written by : enjoyneering79
   sourse code: https://github.com/enjoyneering/MAX6675
 
+  - MAX31855 maximum power supply voltage is 3.6v
   - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
   - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
     with 0.25°C resolution/increment.
@@ -25,8 +26,8 @@
   ESP8266 ESP-01:.......................... GPIO0/D5               GPIO2/D3
   NodeMCU 1.0, WeMos D1 Mini............... GPIO4/D2               GPIO5/D1
 
-                                            *STM32F103xxxx pins B7/B7 are 5v tolerant, but bi-directional
-                                             logic level converter is recommended
+                                           *STM32F103xxxx pins B7/B7 are 5v tolerant, but bi-directional
+                                            logic level converter is recommended
 
   This sensor uses SPI bus to communicate, specials pins are required to interface
   Board:                                    SCLK        MISO        SS don't use for CS   MOSI
@@ -36,10 +37,10 @@
   Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**       PA4**                 PA7**
   NodeMCU 1.0, WeMos D1 Mini............... GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
 
-                                            *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
-                                             pullup-down resistor
-                                           **STM32F103xxxx pins are NOT 5v tolerant, bi-directional
-                                             logic level converter is needed
+                                           *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
+                                            pullup-down resistor
+                                          **STM32F103xxxx pins are NOT 5v tolerant, bi-directional
+                                            logic level converter is needed
 
   Frameworks & Libraries:
   ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
@@ -84,7 +85,7 @@ void setup()
   /* LCD connection check */  
   while (lcd.begin(LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS) != true) //20x4 display, 5x8 pixels size
   {
-    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal.")); //(F()) saves string to flash & keeps dynamic memory
+    Serial.println(F("PCF8574 is not connected or lcd pins declaration is wrong. Only pins numbers: 4,5,6,16,11,12,13,14 are legal.")); //(F()) saves string to flash & keeps dynamic memory free
     delay(5000);
   }
   lcd.print(F("PCF8574 is OK"));
