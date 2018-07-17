@@ -53,7 +53,7 @@
 */
 /***************************************************************************************************/
 #include <SPI.h>
-#include <Wire.h>               //https://github.com/enjoyneering/ESP8266-I2C-Driver
+#include <Wire.h>               //use bug free i2c driver https://github.com/enjoyneering/ESP8266-I2C-Driver
 #include <ESP8266WiFi.h>
 #include <MAX31855.h>
 #include <LiquidCrystal_I2C.h>  //https://github.com/enjoyneering/LiquidCrystal_I2C
