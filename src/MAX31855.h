@@ -1,7 +1,7 @@
 /***************************************************************************************************/
 /*
    This is an Arduino library for 14-bit MAX31855 K-Thermocouple to Digital Converter
-   with 12-bit Cold Junction Compensation. Can work with hardware & bitbang 5Mhz SPI & sampling
+   with 12-bit Cold Junction Compensation conneted to hardware 5Mhz SPI with maximum sampling
    rate ~9..10Hz.
 
    - MAX31855 maximum power supply voltage is 3.6v
@@ -19,20 +19,21 @@
    sourse code: https://github.com/enjoyneering/MAX31855
 
    This sensor uses SPI bus to communicate, specials pins are required to interface
-   Board:                                    SCLK        MISO        SS don't use for CS   MOSI
-   Uno, Mini, Pro, ATmega168, ATmega328..... 13          12          10                    11
-   Mega2560, Due............................ 52          50          53                    51
-   Leonardo, ProMicro, ATmega32U4........... 15          14          x                     16
-   Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**       PA4**                 PA7**
-   NodeMCU 1.0, WeMos D1 Mini............... GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+   Board:                                    MOSI        MISO        SCLK         SS, don't use for CS   Level
+   Uno, Mini, Pro, ATmega168, ATmega328..... 11          12          13           10                     5v
+   Mega, Mega2560, ATmega1280, ATmega2560... 51          50          52           53                     5v
+   Due, SAM3X8E............................. ICSP4       ICSP1       ICSP3        x                      3.3v
+   Leonardo, ProMicro, ATmega32U4........... 16          14          15           x                      5v
+   Blue Pill, STM32F103xxxx boards.......... PA17        PA6         PA5          PA4                    3v
+   NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
+   ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
                                             *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
                                              pullup-down resistor
-                                           **STM32F103xxxx pins are NOT 5v tolerant, bi-directional
-                                             logic level converter is needed
- 
+
    Frameworks & Libraries:
    ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
+   ESP32 Core            - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
    ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
    STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
@@ -59,18 +60,20 @@
 #include <avr/pgmspace.h>              //use for PROGMEM Arduino STM32
 #endif
 
+#ifndef  MAX31855_SOFT_SPI             //enable upload spi.h
 #include <SPI.h>
+#endif
+
 
 #define MAX31855_CONVERSION_POWER_UP_TIME   200    //in milliseconds
 #define MAX31855_CONVERSION_TIME            100    //in milliseconds, 9..10Hz sampling rate 
-#define MAX31855_THERMOCOUPLE_RESOLUTION    0.25   //in deg.C per dac step
-#define MAX31855_COLD_JUNCTION_RESOLUTION   0.0625 //in deg.C per dac step
+#define MAX31855_THERMOCOUPLE_RESOLUTION    0.25   //in °C per dac step
+#define MAX31855_COLD_JUNCTION_RESOLUTION   0.0625 //in °C per dac step
 
 
 #define MAX31855_ID                         31855
 #define MAX31855_FORCE_READ_DATA            7      //force to read the data, 7 is unique because d2d1d0 can't be all high at the same time
 #define MAX31855_ERROR                      2000   //returned value if any error happends
-
 
 #define MAX31855_THERMOCOUPLE_OK            0
 #define MAX31855_THERMOCOUPLE_SHORT_TO_VCC  1
@@ -82,8 +85,7 @@
 class MAX31855
 {
   public:
-   MAX31855(uint8_t cs, uint8_t so, uint8_t sck);                                    //sw spi
-   MAX31855(uint8_t cs);                                                             //hw spi
+   MAX31855(uint8_t cs);
 
    void     begin(void);
    uint8_t  detectThermocouple(int32_t rawValue = MAX31855_FORCE_READ_DATA);
@@ -93,10 +95,9 @@ class MAX31855
    int32_t  readRawData(void);
  
   private:
-   bool    _useHardwareSPI;                                                          //true -> hw spi, false ->sw spi
+
+  protected:
    uint8_t _cs;
-   uint8_t _so;
-   uint8_t _sck;
 };
 
 #endif
