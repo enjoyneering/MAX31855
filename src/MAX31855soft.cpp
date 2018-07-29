@@ -74,7 +74,7 @@ MAX31855soft::MAX31855soft(uint8_t cs, uint8_t so, uint8_t sck) : MAX31855(cs)
 void MAX31855soft::begin(void)
 {
   pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH);                  //disables spi interface for MAX31855, but it will initiate measurement/conversion
+  digitalWrite(_cs, HIGH);                  //disables SPI interface for MAX31855, but it will initiate measurement/conversion
 
   pinMode(_so, INPUT);
   pinMode(_sck, OUTPUT);
@@ -134,7 +134,7 @@ int32_t MAX31855soft::readRawData(void)
     digitalWrite(_sck, LOW);
   } 
 
-  digitalWrite(_cs, HIGH);                       //disables SPI interface, but it will initiate measurement/conversion
+  digitalWrite(_cs, HIGH);                       //disables SPI interface for MAX31855, but it will initiate measurement/conversion
 
   return rawData;
 }
