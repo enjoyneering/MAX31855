@@ -1,7 +1,7 @@
 /***************************************************************************************************/
 /*
    This is an Arduino library for 14-bit MAX31855 K-Thermocouple to Digital Converter
-   with 12-bit Cold Junction Compensation. Can work with hardware & bitbang 5Mhz SPI & sampling
+   with 12-bit Cold Junction Compensation conneted to hardware 5Mhz SPI with maximum sampling
    rate ~9..10Hz.
 
    - MAX31855 maximum power supply voltage is 3.6v
@@ -19,20 +19,21 @@
    sourse code: https://github.com/enjoyneering/MAX31855
 
    This sensor uses SPI bus to communicate, specials pins are required to interface
-   Board:                                    SCLK        MISO        SS don't use for CS   MOSI
-   Uno, Mini, Pro, ATmega168, ATmega328..... 13          12          10                    11
-   Mega2560, Due............................ 52          50          53                    51
-   Leonardo, ProMicro, ATmega32U4........... 15          14          x                     16
-   Blue Pill, STM32F103xxxx boards.......... PA5**       PA6**       PA4**                 PA7**
-   NodeMCU 1.0, WeMos D1 Mini............... GPIO14/D5   GPIO12/D6   GPIO15/D8*            GPIO13/D7
+   Board:                                    MOSI        MISO        SCLK         SS, don't use for CS   Level
+   Uno, Mini, Pro, ATmega168, ATmega328..... 11          12          13           10                     5v
+   Mega, Mega2560, ATmega1280, ATmega2560... 51          50          52           53                     5v
+   Due, SAM3X8E............................. ICSP4       ICSP1       ICSP3        x                      3.3v
+   Leonardo, ProMicro, ATmega32U4........... 16          14          15           x                      5v
+   Blue Pill, STM32F103xxxx boards.......... PA17        PA6         PA5          PA4                    3v
+   NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
+   ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
                                             *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
                                              pullup-down resistor
-                                           **STM32F103xxxx pins are NOT 5v tolerant, bi-directional
-                                             logic level converter is needed
  
    Frameworks & Libraries:
    ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
+   ESP32 Core            - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
    ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
    STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
@@ -49,66 +50,30 @@
 /*
     MAX31855()
 
-    Constructor for software read only SPI serial interface
+    Constructor for hardware read only SPI
 
     NOTE:
-    cs  - chip select, set CS low to enable the serial interface
-    so  - serial data output
-    sck - serial clock input
-*/
-/**************************************************************************/
-MAX31855::MAX31855(uint8_t cs, uint8_t so, uint8_t sck)
-{
-  _useHardwareSPI = false; //false -> sw spi
-
-  _cs  = cs;               //sw ss
-  _so  = so;               //sw miso
-  _sck = sck;              //sw sclk
-}
-
-/**************************************************************************/
-/*
-    MAX31855()
-
-    Constructor for hardware read only SPI serial interface
-
-    NOTE:
-    - chip select "cs", set CS low to enable the serial interface
+     - cs is chip select, set CS low to enable the serial interface
 */
 /**************************************************************************/
 MAX31855::MAX31855(uint8_t cs)
 {
-  _useHardwareSPI = true; //true -> hw spi
-
-  _cs  = cs;              //hw ss
-  _so  = 0;               //sw miso
-  _sck = 0;               //sw sclk
+  _cs = cs; //cs chip select
 }
 
 /**************************************************************************/
 /*
     begin()
 
-    Initializes & configures I2C
+    Initializes & configures hardware SPI
 */
 /**************************************************************************/
 void MAX31855::begin(void)
 {
   pinMode(_cs, OUTPUT);
-  digitalWrite(_cs, HIGH);                  //disables the spi interface for MAX31855, but it will initiate measurement/conversion
+  digitalWrite(_cs, HIGH);                  //disables SPI interface for MAX31855, but it will initiate measurement/conversion
 
-  switch (_useHardwareSPI)                  //true -> hw spi, false ->sw spi
-  {
-    case true:
-      SPI.begin();                          //setting hardware SCK, MOSI, SS to output, pull SCK, MOSI low & SS high      
-      break;
-
-    case false:
-      pinMode(_so, INPUT);
-      pinMode(_sck, OUTPUT);
-      digitalWrite(_sck, LOW);
-      break;
-  }
+  SPI.begin();                              //setting hardware SCK, MOSI, SS to output, pull SCK, MOSI low & SS high    
 
   delay(MAX31855_CONVERSION_POWER_UP_TIME);
 }
@@ -224,7 +189,7 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
 /*
     readRawData()
 
-    Reads raw data from MAX31855, bit-banging implementation
+    Reads raw data from MAX31855 via hardware SPI
 
     NOTE:
     - read of the cold-junction compensated thermocouple temperature requires
@@ -257,36 +222,23 @@ int32_t MAX31855::readRawData(void)
 {
   int32_t rawData = 0;
 
-  digitalWrite(_cs, LOW);                                                //stop  measurement/conversion
-  delay(1);                                                              //4MHz  is 0.25usec, do we need it???
-  digitalWrite(_cs, HIGH);                                               //start measurement/conversion
+  digitalWrite(_cs, LOW);                                            //stop  measurement/conversion
+  delayMicroseconds(1);                                              //4MHz  is 0.25usec, do we need it???
+  digitalWrite(_cs, HIGH);                                           //start measurement/conversion
   delay(MAX31855_CONVERSION_TIME);
 
-  digitalWrite(_cs, LOW);                                                //set CS low to enable spi interface for MAX31855
+  digitalWrite(_cs, LOW);                                            //set CS low to enable SPI interface for MAX31855
 
-  switch (_useHardwareSPI)                                               //true -> hw spi, false -> sw spi
+  SPI.beginTransaction(SPISettings(5000000UL, MSBFIRST, SPI_MODE0)); //speed ~5MHz, read MSB first, SPI mode 0, see note
+
+  for (uint8_t i = 0; i < 2; i++)                                    //read 32-bits via hardware SPI, in order MSB->LSB (D31..D0 bit)
   {
-    case true:
-      SPI.beginTransaction(SPISettings(5000000UL, MSBFIRST, SPI_MODE0)); //speed ~5MHz, read msb first, spi mode 0, see note
-      for (uint8_t i = 0; i < 2; i++)                                    //read 32-bits via hardware spi, in order MSB->LSB (D31..D0 bit)
-      {
-        rawData = (rawData << 16) | SPI.transfer16(0x0000);              //chip has read only spi & mosi not connected, doesn't metter what to send
-      }
-      break;
+    rawData = (rawData << 16) | SPI.transfer16(0x0000);              //chip has read only SPI & MOSI not connected, so it doesn't metter what to send
+  }
 
-    case false:
-      for (uint8_t i = 0; i < 32; i++)                                   //read 32-bits via software spi, in order MSB->LSB (D31..D0 bit)
-      {
-        digitalWrite(_sck, HIGH);
-        rawData = (rawData << 1) | digitalRead(_so);
-        digitalWrite(_sck, LOW);
-      }
-      break;
-  }  
+  digitalWrite(_cs, HIGH);                                           //disables SPI interface for MAX31855, but it will initiate measurement/conversion
 
-  digitalWrite(_cs, HIGH);                                               //disables spi interface, but it will initiate measurement/conversion
-
-  if (_useHardwareSPI == true) SPI.endTransaction();                     //de-asserting hw chip select & free hw spi for other slaves
+  SPI.endTransaction();                                              //de-asserting hw chip select & free hw SPI for other slaves
 
   return rawData;
 }
