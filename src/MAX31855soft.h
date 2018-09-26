@@ -18,28 +18,27 @@
    written by : enjoyneering79
    sourse code: https://github.com/enjoyneering/MAX31855
 
-   This sensor uses SPI bus to communicate, specials pins are required to interface
-   Board:                                    MOSI        MISO        SCLK         SS, don't use for CS   Level
-   Uno, Mini, Pro, ATmega168, ATmega328..... 11          12          13           10                     5v
-   Mega, Mega2560, ATmega1280, ATmega2560... 51          50          52           53                     5v
-   Due, SAM3X8E............................. ICSP4       ICSP1       ICSP3        x                      3.3v
-   Leonardo, ProMicro, ATmega32U4........... 16          14          15           x                      5v
-   Blue Pill, STM32F103xxxx boards.......... PA17        PA6         PA5          PA4                    3v
-   NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
-   ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
+   Board:                                     Level
+   Uno, Mini, Pro, ATmega168, ATmega328.....  5v
+   Mega, Mega2560, ATmega1280, ATmega2560...  5v
+   Due, SAM3X8E.............................  3.3v
+   Leonardo, ProMicro, ATmega32U4...........  5v
+   Blue Pill, STM32F103xxxx boards..........  3v
+   NodeMCU 1.0, WeMos D1 Mini...............  3v/5v*
+   ESP32....................................  3v
 
-                                            *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
-                                             pullup-down resistor
+                                             *if GPIO2/D4 or GPIO0/D3 is used, apply an external
+                                              25kOhm pullup-down resistor otherwise reset & reset button
+                                              may not work
 
    Frameworks & Libraries:
    ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
    ESP32 Core            - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
-   ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
    STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
 
-   GNU GPL license, all text above must be included in any redistribution, see link below for details:
-   - https://www.gnu.org/licenses/licenses.html
+   GNU GPL license, all text above must be included in any redistribution,
+   see link for details  - https://www.gnu.org/licenses/licenses.html
 */
 /***************************************************************************************************/
 
