@@ -28,39 +28,39 @@
    NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
    ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
-                                            *if GPIO2/D4 or GPIO0/D3 used for for CS, apply an external 25kOhm
-                                             pullup-down resistor
+                                             *if GPIO2/D4 or GPIO0/D3 is used for for CS, apply an external
+                                              25kOhm pullup-down resistor otherwise reset & reset button
+                                              may not work
 
    Frameworks & Libraries:
    ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
    ESP32 Core            - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
-   ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
    STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
 
-   GNU GPL license, all text above must be included in any redistribution, see link below for details:
-   - https://www.gnu.org/licenses/licenses.html
+   GNU GPL license, all text above must be included in any redistribution,
+   see link for details  - https://www.gnu.org/licenses/licenses.html
 */
 /***************************************************************************************************/
 
 #ifndef MAX31855_h
 #define MAX31855_h
 
-#if defined(ARDUINO) && ARDUINO >= 100 //arduino core v1.0 or later
+#if defined(ARDUINO) && ((ARDUINO) >= 100) //arduino core v1.0 or later
 #include <Arduino.h>
 #else
 #include <WProgram.h>
 #endif
 
 #if defined(__AVR__)
-#include <avr/pgmspace.h>              //use for PROGMEM Arduino AVR
+#include <avr/pgmspace.h>                  //use for PROGMEM Arduino AVR
 #elif defined(ESP8266)
-#include <pgmspace.h>                  //use for PROGMEM Arduino ESP8266
+#include <pgmspace.h>                      //use for PROGMEM Arduino ESP8266
 #elif defined(_VARIANT_ARDUINO_STM32_)
-#include <avr/pgmspace.h>              //use for PROGMEM Arduino STM32
+#include <avr/pgmspace.h>                  //use for PROGMEM Arduino STM32
 #endif
 
-#ifndef  MAX31855_SOFT_SPI             //enable upload spi.h
+#ifndef  MAX31855_SOFT_SPI                 //enable upload spi.h
 #include <SPI.h>
 #endif
 
