@@ -21,7 +21,7 @@ Supports:
 - Arduino ESP32
 - Arduino STM32
 
-Beware of a fake MAX31855 K-Thermocouple Sensor Module - http://forum.arduino.cc/index.php?topic=526439.0
+Beware of a [fake MAX31855 K-Thermocouple Sensor Module](http://forum.arduino.cc/index.php?topic=526439.0)
 
 [license]:       https://choosealicense.com/licenses/gpl-3.0/
 [license-badge]: https://img.shields.io/aur/license/yaourt.svg
