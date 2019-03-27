@@ -13,6 +13,7 @@ This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital convert
   near the converter because this may produce an errors.
 - It is strongly recommended to add a 10nF/0.01mF ceramic surface-mount capacitor, placed across
   the T+ and T- pins, to filter noise on the thermocouple lines.
+- Library returns 2000, if thermocouple open/shorted or a communication error has occurred
 
 Supports:
 
