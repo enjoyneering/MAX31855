@@ -1,4 +1,4 @@
-[![license-badge][]][license] ![version] [![stars][]][stargazers] [![github-issues][]][issues]
+[![license-badge][]][license] ![version] [![stars][]][stargazers] [![hit-count][]][count][![github-issues][]][issues]
 
 # MAX31855
 This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital converter with 12-bit cold junction compensation & maximum sampling rate about 10Hz. Can work with 5Mhz wardware & software/bit-bang 3-wire SPI & supports all integrated circuit features.
