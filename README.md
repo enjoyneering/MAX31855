@@ -1,12 +1,13 @@
 [![license-badge][]][license] ![version] [![stars][]][stargazers] [![hit-count][]][count] [![github-issues][]][issues]
 
 # MAX31855
-This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital converter with 12-bit cold junction compensation & maximum sampling rate about 10Hz. Can work with 5Mhz wardware & software/bit-bang 3-wire SPI & supports all integrated circuit features.
+This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital converter with 12-bit cold junction compensation & maximum sampling rate about 10Hz. Supports all sensor features. Can work with hardware or software emulated 3-wire SPI. 
 
 - Maximum power supply voltage is 3.6v
 - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
 - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
   with 0.25°C resolution/increment.
+- Maximun SPI bus speed 5Mhz
 - Cold junction compensation range -40°C..+125° ±3°C with 0.062°C resolution/increment.
   Optimal performance of cold junction compensation happends when the thermocouple cold junction
   & the MAX31855 are at the same temperature. Avoid placing heat-generating devices or components
