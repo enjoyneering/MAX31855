@@ -12,7 +12,7 @@ This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital convert
   Optimal performance of cold junction compensation happends when the thermocouple cold junction
   & the MAX31855 are at the same temperature. Avoid placing heat-generating devices or components
   near the converter because this may produce an errors.
-- It is STRONGLY recommended to add a 10nF/0.01mF capacitor, placed across
+- It is **STRONGLY** recommended to add a 10nF/0.01mF capacitor, placed across
   the T+ and T- pins, to filter noise/false readings on the thermocouple lines.
   
 **Library returns 2000, if thermocouple open/shorted or a communication error has occurred
