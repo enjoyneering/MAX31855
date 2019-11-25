@@ -227,9 +227,9 @@ int32_t MAX31855::readRawData(void)
   digitalWrite(_cs, HIGH);                                           //start measurement/conversion
   delay(MAX31855_CONVERSION_TIME);
 
-  digitalWrite(_cs, LOW);                                            //set CS low to enable SPI interface for MAX31855
-
   SPI.beginTransaction(SPISettings(5000000UL, MSBFIRST, SPI_MODE0)); //speed ~5MHz, read MSB first, SPI mode 0, see note
+   
+  digitalWrite(_cs, LOW);                                            //set CS low to enable SPI interface for MAX31855
 
   for (uint8_t i = 0; i < 2; i++)                                    //read 32-bits via hardware SPI, in order MSB->LSB (D31..D0 bit)
   {
