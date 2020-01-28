@@ -112,7 +112,7 @@ void MAX31855soft::begin(void)
 
     - max SPI master clock speed is equal with board speed
       (16000000UL for 5V 16MHz/ProMini), but MAX31855 max speed is only 5MHz
-    - SPI_MODE0 -> capture data on clock's falling edge
+    - SPI_MODE0 -> data available shortly after the rising edge of SCK
 */
 /**************************************************************************/
 int32_t MAX31855soft::readRawData(void)
@@ -124,13 +124,13 @@ int32_t MAX31855soft::readRawData(void)
   digitalWrite(_cs, HIGH);                       //start measurement/conversion
   delay(MAX31855_CONVERSION_TIME);
 
-  digitalWrite(_sck, LOW);
+  digitalWrite(_sck, LOW);                       //do we need it???
   digitalWrite(_cs, LOW);                        //set CS low to enable SPI interface for MAX31855
 
   for (int8_t i = 32; i > 0; i--)                //read 32-bits via software SPI, in order MSB->LSB (D31..D0 bit)
   {
     digitalWrite(_sck, HIGH);
-    rawData = (rawData << 1) | digitalRead(_so);
+    rawData = (rawData << 1) | digitalRead(_so); //emulate SPI_MODE0, data available shortly after the rising edge of SCK
     digitalWrite(_sck, LOW);
   } 
 
