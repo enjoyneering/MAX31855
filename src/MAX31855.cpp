@@ -28,15 +28,14 @@
    NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
    ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
-                                             *if GPIO2/D4 or GPIO0/D3 is used for for CS, apply an external
-                                              25kOhm pullup-down resistor otherwise reset & reset button
-                                              may not work
+                                              *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
 
    Frameworks & Libraries:
-   ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
-   ESP32 Core            - https://github.com/espressif/arduino-esp32
+   ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
+   ESP32   Core          - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
-   STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
+   STM32   Core          - https://github.com/stm32duino/Arduino_Core_STM32
+                         - https://github.com/rogerclarkmelbourne/Arduino_STM32
 
    GNU GPL license, all text above must be included in any redistribution,
    see link for details  - https://www.gnu.org/licenses/licenses.html
@@ -215,7 +214,7 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
 
     - max SPI master clock speed is equal with board speed
       (16000000UL for 5V 16MHz/ProMini), but MAX31855 max speed is only 5MHz
-    - SPI_MODE0 -> capture data on clock's falling edge
+    - SPI_MODE0 -> data available shortly after the rising edge of SCK
 */
 /**************************************************************************/
 int32_t MAX31855::readRawData(void)
