@@ -28,6 +28,7 @@
    ESP32....................................  3v
 
                                               *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
+                                              for flash & boot
 
    Frameworks & Libraries:
    ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
@@ -43,6 +44,15 @@
 
 #ifndef MAX31855soft_h
 #define MAX31855soft_h
+
+/*
+   Unfortunately, you cannot #define something in the sketch & get
+   it in the library, because the Arduino toolchain includes library
+   files & compiles them in advance, not knowing where it will be used.
+
+   - uncomment to disable interrupts during bit-bang
+*/
+//#define MAX31855_DISABLE_INTERRUPTS
 
 #define MAX31855_SOFT_SPI //disable upload spi.h
 
