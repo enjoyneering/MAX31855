@@ -54,7 +54,7 @@
 */
 //#define MAX31855_DISABLE_INTERRUPTS
 
-#define MAX31855_SOFT_SPI //disable upload spi.h
+#define MAX31855_SOFT_SPI //disable upload hw deriver spi.h
 
 #include <MAX31855.h>
 
