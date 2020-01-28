@@ -28,7 +28,8 @@
    NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
    ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
-                                              *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
+                                              for flash & boot
 
    Frameworks & Libraries:
    ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
@@ -52,7 +53,7 @@
     Constructor for hardware read only SPI
 
     NOTE:
-     - cs is chip select, set CS low to enable the serial interface
+    - cs is chip select, set cs low to enable serial interface
 */
 /**************************************************************************/
 MAX31855::MAX31855(uint8_t cs)
@@ -178,8 +179,8 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
 
   if (getChipID(rawValue) != MAX31855_ID) return MAX31855_ERROR;
 
-  rawValue = rawValue & 0x0000FFFF;                                   //clear D31..D16 bits
-  rawValue = rawValue >> 4;                                           //clear D3...D0  bits
+  rawValue = rawValue & 0x0000FFFF; //clear D31..D16 bits
+  rawValue = rawValue >> 4;         //clear D3...D0  bits
 
   return (float)rawValue * MAX31855_COLD_JUNCTION_RESOLUTION;
 }
@@ -212,8 +213,11 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
     - bit D1 is normally low & goes high to indicate a thermocouple short to GND
     - bit D0 is normally low & goes high to indicate a thermocouple open circuit
 
-    - max SPI master clock speed is equal with board speed
-      (16000000UL for 5V 16MHz/ProMini), but MAX31855 max speed is only 5MHz
+    - arduino 8-bit AVR maximum SPI master clock speed is mcu speed/2,
+      for 5v-16MHz/ProMini speed is 16000000/2=8MHz 
+    - arduino ESP8266 maximum SPI master clock speed is 80000000=80MHz
+    - arduino STM32 maximum SPI master clock speed is mcu speed/2,
+      for STM32F103C8 speed is 72000000/2=36MHz
     - SPI_MODE0 -> data available shortly after the rising edge of SCK
 */
 /**************************************************************************/
@@ -221,23 +225,24 @@ int32_t MAX31855::readRawData(void)
 {
   int32_t rawData = 0;
 
-  digitalWrite(_cs, LOW);                                            //stop  measurement/conversion
-  delayMicroseconds(1);                                              //4MHz  is 0.25usec, do we need it???
-  digitalWrite(_cs, HIGH);                                           //start measurement/conversion
+  digitalWrite(_cs, LOW);                                          //stop  measurement/conversion
+  delayMicroseconds(1);                                            //5MHz  is 0.2μsec, do we need it???
+  digitalWrite(_cs, HIGH);                                         //start measurement/conversion
+
   delay(MAX31855_CONVERSION_TIME);
 
-  SPI.beginTransaction(SPISettings(5000000UL, MSBFIRST, SPI_MODE0)); //speed ~5MHz, read MSB first, SPI mode 0, see note
-   
-  digitalWrite(_cs, LOW);                                            //set CS low to enable SPI interface for MAX31855
+  SPI.beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE0)); //up to 5MHz, read MSB first, SPI mode 0, see note
 
-  for (uint8_t i = 0; i < 2; i++)                                    //read 32-bits via hardware SPI, in order MSB->LSB (D31..D0 bit)
+  digitalWrite(_cs, LOW);                                          //set software CS low to enable SPI interface for MAX31855
+
+  for (uint8_t i = 0; i < 2; i++)                                  //read 32-bits via hardware SPI, in order MSB->LSB (D31..D0 bit)
   {
-    rawData = (rawData << 16) | SPI.transfer16(0x0000);              //chip has read only SPI & MOSI not connected, so it doesn't metter what to send
+    rawData = (rawData << 16) | SPI.transfer16(0x0000);            //chip has read only SPI & MOSI not connected, so it doesn't metter what to send
   }
 
-  digitalWrite(_cs, HIGH);                                           //disables SPI interface for MAX31855, but it will initiate measurement/conversion
+  digitalWrite(_cs, HIGH);                                         //disables SPI interface for MAX31855, but it will initiate measurement/conversion
 
-  SPI.endTransaction();                                              //de-asserting hw chip select & free hw SPI for other slaves
+  SPI.endTransaction();                                            //de-asserting hardware CS & free hw SPI for other slaves
 
   return rawData;
 }
