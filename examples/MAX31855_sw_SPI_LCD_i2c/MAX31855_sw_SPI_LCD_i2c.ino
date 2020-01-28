@@ -24,19 +24,22 @@
    Leonardo, Micro, ATmega32U4.............. 2                      3                      5v
    Digistump, Trinket, ATtiny85............. 0/physical pin no.5    2/physical pin no.7    5v
    Blue Pill, STM32F103xxxx boards.......... PB7                    PB6                    3.3v/5v
-   ESP8266 ESP-01........................... GPIO0/D5               GPIO2/D3               3.3v/5v
-   NodeMCU 1.0, WeMos D1 Mini............... GPIO4/D2               GPIO5/D1               3.3v/5v
+   ESP8266 ESP-01........................... GPIO0/D5               GPIO2/D3               3.3v/5v*
+   NodeMCU 1.0, WeMos D1 Mini............... GPIO4/D2               GPIO5/D1               3.3v/5v*
    ESP32.................................... GPIO21/D21             GPIO22/D22             3.3v
 
-   Frameworks & Libraries:
-   ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
-   ESP32 Core            - https://github.com/espressif/arduino-esp32
-   ESP8266 Core          - https://github.com/esp8266/Arduino
-   ESP8266 I2C lib fixed - https://github.com/enjoyneering/ESP8266-I2C-Driver
-   STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
+                                              for flash & boot
 
-   GNU GPL license, all text above must be included in any redistribution, see link below for details:
-   - https://www.gnu.org/licenses/licenses.html
+   Frameworks & Libraries:
+   ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
+   ESP32   Core          - https://github.com/espressif/arduino-esp32
+   ESP8266 Core          - https://github.com/esp8266/Arduino
+   STM32   Core          - https://github.com/stm32duino/Arduino_Core_STM32
+                         - https://github.com/rogerclarkmelbourne/Arduino_STM32
+
+   GNU GPL license, all text above must be included in any redistribution,
+   see link for details  - https://www.gnu.org/licenses/licenses.html
 */
 /***************************************************************************************************/
 #include <Wire.h>               //for esp8266 use bug free i2c driver https://github.com/enjoyneering/ESP8266-I2C-Driver
@@ -63,7 +66,7 @@ so  - serial data output
 sck - serial clock input
 */
 
-MAX31855soft      myMAX31855(3, 4, 7); //for ESP8266 use D3, D4, D7
+MAX31855soft      myMAX31855(3, 4, 7); //for ESP8266 change to D3 (fails to BOOT/FLASH if pin LOW), D4 (fails to BOOT/FLASH if pin LOW), D7
 LiquidCrystal_I2C lcd(PCF8574_ADDR_A21_A11_A01, 4, 5, 6, 16, 11, 12, 13, 14, POSITIVE);
 
 
