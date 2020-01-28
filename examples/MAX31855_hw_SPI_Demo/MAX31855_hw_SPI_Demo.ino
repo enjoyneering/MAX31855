@@ -50,7 +50,7 @@ int32_t rawData = 0;
   cs - chip select
 */
 
-MAX31855 myMAX31855(3); //for ESP8266 change to D4 (fails to BOOT/FLASH if pin LOW)
+MAX31855 myMAX31855(3); //chip select pin, for ESP8266 change to D4 (fails to BOOT/FLASH if pin LOW)
 
 
 void setup()
