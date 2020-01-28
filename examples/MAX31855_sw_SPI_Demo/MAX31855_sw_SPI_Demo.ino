@@ -25,15 +25,15 @@
    NodeMCU 1.0, WeMos D1 Mini...............  3v/5v*
    ESP32....................................  3v
 
-                                             *if GPIO2/D4 or GPIO0/D3 is used, apply an external
-                                              25kOhm pullup-down resistor otherwise reset & reset button
-                                              may not work
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
+                                              for flash & boot
 
    Frameworks & Libraries:
-   ATtiny Core           - https://github.com/SpenceKonde/ATTinyCore
-   ESP32 Core            - https://github.com/espressif/arduino-esp32
+   ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
+   ESP32   Core          - https://github.com/espressif/arduino-esp32
    ESP8266 Core          - https://github.com/esp8266/Arduino
-   STM32 Core            - https://github.com/rogerclarkmelbourne/Arduino_STM32
+   STM32   Core          - https://github.com/stm32duino/Arduino_Core_STM32
+                         - https://github.com/rogerclarkmelbourne/Arduino_STM32
 
    GNU GPL license, all text above must be included in any redistribution,
    see link for details  - https://www.gnu.org/licenses/licenses.html
@@ -51,7 +51,7 @@ int32_t rawData = 0;
   sck - serial clock input
 */
 
-MAX31855soft myMAX31855(3, 4, 7); //for ESP8266 use D3, D4, D7
+MAX31855soft myMAX31855(3, 4, 7); //for ESP8266 change to D3 (fails to BOOT/FLASH if pin LOW), D4 (fails to BOOT/FLASH if pin LOW), D7
 
 
 void setup()
