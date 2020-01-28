@@ -28,7 +28,7 @@ Beware of a [fake MAX31855 K-Thermocouple Sensor Module](http://forum.arduino.cc
 
 [license-badge]: https://img.shields.io/badge/License-GPLv3-blue.svg
 [license]:       https://choosealicense.com/licenses/gpl-3.0/
-[version]:       https://img.shields.io/badge/Version-1.2.1-green.svg
+[version]:       https://img.shields.io/badge/Version-1.2.2-green.svg
 [stars]:         https://img.shields.io/github/stars/enjoyneering/MAX31855.svg
 [stargazers]:    https://github.com/enjoyneering/MAX31855/stargazers
 [hit-count]:     http://hits.dwyl.io/enjoyneering/MAX31855.svg
