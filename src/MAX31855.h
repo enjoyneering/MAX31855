@@ -86,7 +86,6 @@ class MAX31855
 {
   public:
    MAX31855(uint8_t cs);
-   MAX31855();
 
            void     begin(void);
            uint8_t  detectThermocouple(int32_t rawValue = MAX31855_FORCE_READ_DATA);
