@@ -131,11 +131,12 @@ int32_t MAX31855soft::readRawData(void)
   noInterrupts();                                //disable all interrupts for critical operations below
   #endif
 
+  /* emulate SPI_MODE0 */
   for (int8_t i = 32; i > 0; i--)                //read 32-bits via software SPI, in order MSB->LSB (D31..D0 bit)
   {
-    digitalWrite(_sck, HIGH);
-    rawData = (rawData << 1) | digitalRead(_so); //emulate SPI_MODE0, data available shortly after the rising edge of SCK
-    digitalWrite(_sck, LOW);
+    digitalWrite(_sck, HIGH);                    //data available shortly after rising edge of SCK
+    rawData = (rawData << 1) | digitalRead(_so);
+    digitalWrite(_sck, LOW);                     //data is clocked out on falling edge of SCK
   }
 
   #ifdef MAX31855_DISABLE_INTERRUPTS
