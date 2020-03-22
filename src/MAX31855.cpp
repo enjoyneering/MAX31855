@@ -232,7 +232,7 @@ int32_t MAX31855::readRawData(void)
 
   delay(MAX31855_CONVERSION_TIME);
 
-  MAXSPI->beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE0)); //up to 5MHz, read MSB first, SPI mode 0, see note
+  MAXSPI->beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0)); //up to 5MHz, read MSB first, SPI mode 0, see note
 
   digitalWrite(_cs, LOW);                                          //set software CS low to enable SPI interface for MAX31855
 
