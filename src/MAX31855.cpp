@@ -5,6 +5,7 @@
    rate ~9..10Hz.
 
    - MAX31855 maximum power supply voltage is 3.6v
+   - Maximum SPI bus speed 5Mhz
    - K-type thermocouples have an absolute accuracy of around ±2°C..±6°C.
    - Measurement tempereture range -200°C..+700°C ±2°C or -270°C..+1372°C ±6°C
      with 0.25°C resolution/increment.
@@ -101,6 +102,8 @@ uint8_t MAX31855::detectThermocouple(int32_t rawValue)
 {
   if (rawValue == MAX31855_FORCE_READ_DATA) rawValue = readRawData();
 
+  if (rawValue == 0)                    return MAX31855_THERMOCOUPLE_READ_FAIL;
+
   if (bitRead(rawValue, 16) == 1)
   {
     if      (bitRead(rawValue, 2) == 1) return MAX31855_THERMOCOUPLE_SHORT_TO_VCC;
@@ -125,9 +128,10 @@ uint16_t MAX31855::getChipID(int32_t rawValue)
 {
   if (rawValue == MAX31855_FORCE_READ_DATA) rawValue = readRawData();
 
+  if (rawValue == 0)                                           return MAX31855_THERMOCOUPLE_READ_FAIL;
   if (bitRead(rawValue, 17) == 0 && bitRead(rawValue, 3) == 0) return MAX31855_ID;
 
-  return 0;
+  return MAX31855_ERROR;
 }
 
 /**************************************************************************/
@@ -153,7 +157,7 @@ float MAX31855::getTemperature(int32_t rawValue)
 {
   if (rawValue == MAX31855_FORCE_READ_DATA) rawValue = readRawData();
 
-  if (detectThermocouple(rawValue) != MAX31855_THERMOCOUPLE_OK || getChipID(rawValue) != MAX31855_ID) return MAX31855_ERROR;
+  if (detectThermocouple(rawValue) != MAX31855_THERMOCOUPLE_OK) return MAX31855_ERROR;
 
   rawValue = rawValue >> 18; //clear D17..D0 bits
 
@@ -192,6 +196,8 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
     Reads raw data from MAX31855 via hardware SPI
 
     NOTE:
+    - max SPI clock speed for MAX31855 is 5MHz
+    - in SPI_MODE0 data available shortly after the rising edge of SCK
     - read of the cold-junction compensated thermocouple temperature requires
       14 clock cycles
     - read of the cold-junction compensated thermocouple temperature & reference
@@ -213,12 +219,15 @@ float MAX31855::getColdJunctionTemperature(int32_t rawValue)
     - bit D1 is normally low & goes high to indicate a thermocouple short to GND
     - bit D0 is normally low & goes high to indicate a thermocouple open circuit
 
+    - 8-bit  16MHz  AVR  one clock cycle is 62.5nS
+    - 32-bit 80MHz/180 ESP8266 one clock cycle is 12.5nS/5.5nS
+    - 32-bit 160MHz/250MHz ESP32 one clock cycle is 6.25nS/4nS
+    - 32-bit 72MHz STM32 one clock cycle is 13.9nS
     - arduino 8-bit AVR maximum SPI master clock speed is mcu speed/2,
       for 5v-16MHz/ProMini speed is 16000000/2=8MHz 
     - arduino ESP8266 maximum SPI master clock speed is 80000000=80MHz
     - arduino STM32 maximum SPI master clock speed is mcu speed/2,
       for STM32F103C8 speed is 72000000/2=36MHz
-    - SPI_MODE0 -> data available shortly after the rising edge of SCK
 */
 /**************************************************************************/
 int32_t MAX31855::readRawData(void)
@@ -226,7 +235,7 @@ int32_t MAX31855::readRawData(void)
   int32_t rawData = 0;
 
   digitalWrite(_cs, LOW);                                          //stop  measurement/conversion
-  delayMicroseconds(1);                                            //5MHz  is 0.2μsec, do we need it???
+  delayMicroseconds(1);                                            //pulse fall time > 100nS
   digitalWrite(_cs, HIGH);                                         //start measurement/conversion
 
   delay(MAX31855_CONVERSION_TIME);
