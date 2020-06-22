@@ -12,7 +12,7 @@
     "type": "git",
     "url":  "https://github.com/enjoyneering/MAX31855.git"
   },
-  "version":    "1.2.2",
+  "version":    "1.2.3",
   "frameworks": "arduino",
   "platforms":  "*"
 }
