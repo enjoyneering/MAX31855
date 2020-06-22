@@ -26,8 +26,8 @@
    NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
    ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
-                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
-                                              for flash & boot
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4
+                                              & GPIO0/D3 for flash & boot, use with caution!!!
 
    Frameworks & Libraries:
    ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
@@ -89,7 +89,38 @@ void loop()
         break;
 
       case MAX31855_THERMOCOUPLE_UNKNOWN:
-        Serial.println(F("Thermocouple_01 unknown error, check spi cable"));
+        Serial.println(F("Thermocouple_01 unknown error"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_READ_FAIL:
+        Serial.println(F("Thermocouple_01 read error, check chip & spi cable"));
+        break;
+    }
+    delay(5000);
+  }
+
+  while (myMAX31855_02.detectThermocouple() != MAX31855_THERMOCOUPLE_OK)
+  {
+    switch (myMAX31855_02.detectThermocouple())
+    {
+      case MAX31855_THERMOCOUPLE_SHORT_TO_VCC:
+        Serial.println(F("Thermocouple_02 short to VCC"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_SHORT_TO_GND:
+        Serial.println(F("Thermocouple_02 short to GND"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_NOT_CONNECTED:
+        Serial.println(F("Thermocouple_02 not connected"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_UNKNOWN:
+        Serial.println(F("Thermocouple_02 unknown error"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_READ_FAIL:
+        Serial.println(F("Thermocouple_02 read error, check chip & spi cable"));
         break;
     }
     delay(5000);
@@ -99,7 +130,7 @@ void loop()
   rawData_02 = myMAX31855_02.readRawData();
 
   Serial.print(F("Chip_ID_01: "));
-  Serial.println(myMAX31855_01.getChipID(rawData_01));
+  Serial.println(myMAX31855_01.getChipID(rawData_01)); //if ChipID != 31855, then you have read fail=2 or unknown error=2000
 
   Serial.print(F("Chip_ID_02: "));
   Serial.println(myMAX31855_02.getChipID(rawData_02));
