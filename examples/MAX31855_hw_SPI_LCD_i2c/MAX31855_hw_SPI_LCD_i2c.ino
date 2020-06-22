@@ -38,8 +38,8 @@
    NodeMCU 1.0, WeMos D1 Mini............... GPIO13/D7   GPIO12/D6   GPIO14/D5    GPIO15/D8*             3v/5v
    ESP32.................................... GPIO23/D23  GPIO19/D19  GPIO18/D18   x                      3v
 
-                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
-                                              for flash & boot
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4
+                                              & GPIO0/D3 for flash & boot, use with caution!!!
 
    Frameworks & Libraries:
    ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
@@ -124,7 +124,11 @@ void setup()
         break;
 
       case MAX31855_THERMOCOUPLE_UNKNOWN:
-        lcd.print(F("unknown error"));                            //check spi cable
+        lcd.print(F("unknown error"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_READ_FAIL:
+        lcd.print(F("SPI reed error"));                           //check chip & spi cable
         break;
     }
     delay(5000);
