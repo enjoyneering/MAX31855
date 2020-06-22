@@ -25,8 +25,8 @@
    NodeMCU 1.0, WeMos D1 Mini...............  3v/5v*
    ESP32....................................  3v
 
-                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4 & GPIO0/D3
-                                              for flash & boot
+                                             *most boards has 10-12kOhm pullup-up resistor on GPIO2/D4
+                                              & GPIO0/D3 for flash & boot, use with caution!!!
 
    Frameworks & Libraries:
    ATtiny  Core          - https://github.com/SpenceKonde/ATTinyCore
@@ -88,7 +88,11 @@ void loop()
         break;
 
       case MAX31855_THERMOCOUPLE_UNKNOWN:
-        Serial.println(F("Thermocouple unknown error, check spi cable"));
+        Serial.println(F("Thermocouple unknown error"));
+        break;
+
+      case MAX31855_THERMOCOUPLE_READ_FAIL:
+        Serial.println(F("Thermocouple read error, check chip & cable"));
         break;
     }
     delay(5000);
@@ -97,7 +101,7 @@ void loop()
   rawData = myMAX31855.readRawData();
 
   Serial.print(F("Chip ID: "));
-  Serial.println(myMAX31855.getChipID(rawData));
+  Serial.println(myMAX31855.getChipID(rawData)); //if ChipID != 31855, then you have read fail=2 or unknown error=2000
 
   Serial.print(F("Cold Junction: "));
   Serial.println(myMAX31855.getColdJunctionTemperature(rawData));
