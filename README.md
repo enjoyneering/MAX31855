@@ -1,4 +1,4 @@
-[![license-badge][]][license] ![version] [![stars][]][stargazers] [![hit-count][]][count] [![github-issues][]][issues]
+[![license-badge][]][license] ![version] [![stars][]][stargazers] ![hit-count] [![github-issues][]][issues]
 
 # MAX31855
 This is an Arduino library for 14-bit MAX31855 K-thermocouple to digital converter with 12-bit cold junction compensation & maximum sampling rate about 10Hz. Supports all sensor features. Can work with hardware or software emulated 3-wire SPI. 
@@ -31,7 +31,6 @@ Beware of a [fake MAX31855 K-Thermocouple Sensor Module](http://forum.arduino.cc
 [version]:       https://img.shields.io/badge/Version-1.2.3-green.svg
 [stars]:         https://img.shields.io/github/stars/enjoyneering/MAX31855.svg
 [stargazers]:    https://github.com/enjoyneering/MAX31855/stargazers
-[hit-count]:     http://hits.dwyl.io/enjoyneering/MAX31855.svg
-[count]:         http://hits.dwyl.io/enjoyneering/MAX31855/badges
+[hit-count]:     https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fenjoyneering%2FMAX31855&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false
 [github-issues]: https://img.shields.io/github/issues/enjoyneering/MAX31855.svg
 [issues]:        https://github.com/enjoyneering/MAX31855/issues/
