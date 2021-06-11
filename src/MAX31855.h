@@ -15,7 +15,7 @@
      near the converter because this may produce an errors.
    - It is strongly recommended to add a 10nF/0.01mF ceramic surface-mount capacitor, placed across
      the T+ and T- pins, to filter noise on the thermocouple lines.
-     
+
    written by : enjoyneering79
    sourse code: https://github.com/enjoyneering/MAX31855
 
@@ -61,9 +61,7 @@
 #include <avr/pgmspace.h>                                 //for Arduino STM32 PROGMEM support
 #endif
 
-#ifndef  MAX31855_SOFT_SPI                 //enable upload hw driver spi.h
 #include <SPI.h>
-#endif
 
 
 #define MAX31855_CONVERSION_POWER_UP_TIME   200    //in milliseconds
@@ -88,15 +86,15 @@ class MAX31855
   public:
    MAX31855(uint8_t cs);
 
-           void     begin(void);
+           void     begin(SPIClass *SPI_pointer = &SPI);
            uint8_t  detectThermocouple(int32_t rawValue = MAX31855_FORCE_READ_DATA);
            uint16_t getChipID(int32_t rawValue = MAX31855_FORCE_READ_DATA);
            float    getTemperature(int32_t rawValue = MAX31855_FORCE_READ_DATA);
            float    getColdJunctionTemperature(int32_t rawValue = MAX31855_FORCE_READ_DATA);
    virtual int32_t  readRawData(void);
- 
-  private:
 
+  private:
+   SPIClass * MAXSPI = NULL;
   protected:
    uint8_t _cs;
 };
