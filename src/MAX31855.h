@@ -54,11 +54,11 @@
 #endif
 
 #if defined(__AVR__)
-#include <avr/pgmspace.h>                  //for Arduino AVR PROGMEM support
+#include <avr/pgmspace.h>                                 //for Arduino AVR PROGMEM support
 #elif defined(ESP8266)
-#include <pgmspace.h>                      //for Arduino ESP8266 PROGMEM support 
-#elif defined(_VARIANT_ARDUINO_STM32_)
-#include <avr/pgmspace.h>                  //for Arduino STM32 PROGMEM support
+#include <pgmspace.h>                                     //for Arduino ESP8266 PROGMEM support 
+#elif defined(_VARIANT_ARDUINO_STM32_) || defined (STM32)
+#include <avr/pgmspace.h>                                 //for Arduino STM32 PROGMEM support
 #endif
 
 #ifndef  MAX31855_SOFT_SPI                 //enable upload hw driver spi.h
